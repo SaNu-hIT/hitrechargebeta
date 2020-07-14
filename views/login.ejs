@@ -35,10 +35,8 @@
           console.log("statusCode" + statusCode);
 
           if (statusCode == "200") {
-
             Cookies.set('user_id', res.userId)
             Cookies.set('phone', phone)
-
             window.location.href = "/ddash";
           } else {
             swal("Oops", message, "error");
@@ -129,12 +127,7 @@
                       <input class="form-control" id="password" placeholder="Password" type="password">
                     </div>
                   </div>
-                  <div class="custom-control custom-control-alternative custom-checkbox">
-                    <input class="custom-control-input" id="customCheckLogin" type="checkbox">
-                    <label class="custom-control-label" for=" customCheckLogin">
-                      <span class="text-muted">Remember me</span>
-                    </label>
-                  </div>
+
                   <div class="text-center">
                     <button type="submit" id="login_button" type="" class="btn btn-primary my-4">Sign in</button>
                   </div>
