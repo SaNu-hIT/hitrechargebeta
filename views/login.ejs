@@ -1,0 +1,153 @@
+<html lang="en">
+
+<head>
+  <% include /header.ejs%>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    console.log("document ready");
+    $("#login_button").click(function(e) {
+      e.preventDefault();
+      console.log("click done");
+      url = "/admin/distributorlogin"
+      console.log(url);
+      var data = {};
+      var phone = $('#phone').val();
+      var password = $('#password').val();
+      data.phone = phone; //input
+      data.password = password; //input
+      console.log(JSON.stringify(data));
+      $.ajax({
+        type: 'POST',
+        data: JSON.stringify(data), //input data to be sent to the server
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        url: url,
+        success: function(res) {
+          console.log('success');
+          console.log(res);
+          var statusCode = res.statusCode
+          var message = res.message
+          var status = res.status
+          console.log("Message" + message);
+          console.log("status" + status);
+          console.log("statusCode" + statusCode);
+
+          if (statusCode == "200") {
+
+            Cookies.set('user_id', res.userId)
+            Cookies.set('phone', phone)
+
+            window.location.href = "/ddash";
+          } else {
+            swal("Oops", message, "error");
+
+          }
+
+
+        },
+        error: function() {
+          console.log("Device control failed");
+        }
+      });
+    });
+  });
+</script>
+
+
+
+<body class="bg-default">
+  <div class="main-content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
+      <div class="container px-4">
+        <a class="navbar-brand" href="../index.html">
+          <img src="../assets/img/brand/white.png" />
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-collapse-main">
+          <!-- Collapse header -->
+          <div class="navbar-collapse-header d-md-none">
+            <div class="row">
+              <div class="col-6 collapse-brand">
+                <a href="../index.html">
+                  <img src="../assets/img/brand/blue.png">
+                </a>
+              </div>
+              <div class="col-6 collapse-close">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle sidenav">
+                  <span></span>
+                  <span></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Navbar items -->
+
+        </div>
+      </div>
+    </nav>
+    <!-- Header -->
+    <div class="header bg-gradient-primary py-7 py-lg-8">
+
+      <div class="separator separator-bottom separator-skew zindex-100">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="container mt--8 pb-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+          <div class="card bg-secondary shadow border-0">
+            <div class="card-header bg-transparent pb-5">
+              <div class="text-muted text-center mt-2 mb-3">
+                <h3>Log in</h3>
+              </div>
+
+              <div class="card-body px-lg-5 py-lg-5">
+                <div class="text-center text-muted mb-4">
+                </div>
+                <form role="form">
+                  <div class="form-group mb-3">
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                      </div>
+                      <input class="form-control" id="phone" placeholder="Phone" type="phone">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-alternative">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                      </div>
+                      <input class="form-control" id="password" placeholder="Password" type="password">
+                    </div>
+                  </div>
+                  <div class="custom-control custom-control-alternative custom-checkbox">
+                    <input class="custom-control-input" id="customCheckLogin" type="checkbox">
+                    <label class="custom-control-label" for=" customCheckLogin">
+                      <span class="text-muted">Remember me</span>
+                    </label>
+                  </div>
+                  <div class="text-center">
+                    <button type="submit" id="login_button" type="" class="btn btn-primary my-4">Sign in</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+</body>
+
+</html>
