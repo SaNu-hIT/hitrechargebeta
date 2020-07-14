@@ -40,12 +40,11 @@
             window.location.href = "/ddash";
           } else {
             swal("Oops", message, "error");
-
           }
-
 
         },
         error: function() {
+          swal("Oops", "Please check internet connection", "error");
           console.log("Device control failed");
         }
       });

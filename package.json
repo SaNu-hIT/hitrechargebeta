@@ -14,16 +14,16 @@
     "body-parser": "^1.19.0",
     "commander": "^5.1.0",
     "content-disposition": "^0.5.3",
+    "cookie-parser": "^1.4.3",
+    "datatables-query": "^0.2.0",
+    "ejs": "^2.5.7",
+    "ejs-locals": "^1.0.2",
     "express": "^4.17.1",
     "express-validator": "^6.5.0",
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.18",
+    "mongoose": "^5.9.24",
     "node-fetch": "^2.6.0",
-    "request": "^2.81.0",
-    "ejs": "^2.5.7",
-    "ejs-locals": "^1.0.2",
-    "datatables-query": "^0.2.0",
-    "cookie-parser": "^1.4.3"
+    "request": "^2.81.0"
   }
 }
