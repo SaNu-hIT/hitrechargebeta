@@ -393,7 +393,7 @@ router.post(
           Data: {},
           status: "success",
           statusCode: "200",
-          message: "Shops get success"
+          message: "Wallet updated successfully"
 
         });
 

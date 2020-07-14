@@ -72,7 +72,7 @@ router.post(
             res.status(200).json({
               status: "success",
               statusCode: "200",
-              message: "Shops create success"
+              message: "Shop created successfully"
             });
           }
         );
@@ -98,8 +98,6 @@ router.post(
           // await user.update({
           //   _id
           // });
-
-
           await Shops.updateOne({
             _id: user._id
           }, {
@@ -109,15 +107,9 @@ router.post(
           res.status(200).json({
             status: "success",
             statusCode: "200",
-            message: "Shops update success"
+            message: "Shop updated successfully"
           });
-
-
-
         }
-
-
-
       }
     } catch (err) {
       console.log(err.message);
