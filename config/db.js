@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 
 
 
-const MONGOURI = "mongodb+srv://betauser:betauser@hitcluster.m2pyu.mongodb.net/hitrecharge?retryWrites=true&w=majority";
-// const MONGOURI = "mongodb+srv://root:root@recharge-9yeed.mongodb.net/recharge?retryWrites=true&w=majority";
+// const MONGOURI = "mongodb+srv://betauser:betauser@hitcluster.m2pyu.mongodb.net/hitrecharge?retryWrites=true&w=majority";
+const MONGOURI = "mongodb+srv://root:root@recharge-9yeed.mongodb.net/recharge?retryWrites=true&w=majority";
 const InitiateMongoServer = async () => {
   await mongoose.connect(MONGOURI, {
     useNewUrlParser: true
