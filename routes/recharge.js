@@ -37,7 +37,7 @@ router.post(
       var audience = "https://topups.reloadly.com"
 
 
-      //for live
+      //for test
       // var client_id = "xXzIvm563MQjH9bbXix9NIW4HLsTPKiv"
       // var client_secret = "nDEsFmHIhfNxicxA4w9E8RmPOq-fY5PzBRA2r02JKIBv9LR0GSCEf9nb0LysdxBx"
       // var audience = "https://topups-sandbox.reloadly.com"

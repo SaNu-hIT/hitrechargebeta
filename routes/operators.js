@@ -269,9 +269,8 @@ router.post(
         access_id
       });
       if (token) {
-
-        https: //topups.reloadly.com/operators/countries/HT
-          var access_toke = token.access_token
+        // https: //topups.reloadly.com/operators/countries/HT
+        var access_toke = token.access_token
         // var url = 'https://topups-sandbox.reloadly.com/operators/countries/IN';
         var liveurl = 'https://topups.reloadly.com/operators/countries/IN';
         var headers = {
@@ -280,61 +279,60 @@ router.post(
         }
         console.log(headers);
         fetch(liveurl, {
-          method: 'GET',
-          headers: headers
-        })
-        .then((res) => {
-          return res.json()
-        })
-        .then((json) => {
-          console.log(json);
-          // Do something with the returned data.
-          if (json.errorCode == "INVALID_TOKEN" || json.errorCode == "TOKEN_EXPIRED") {
-            //refreshToken
-            refreshToken()
-            res.status(200).json({
-              Data: {},
-              Message: "Please try again",
-              Status: "1100",
-              Token: "tokkens"
-            });
-          } else {
-            var i;
-            for (i = 0; i < json.length; i++) {
-              var item = json[i]
-              var operatorId = item.operatorId
-              var name = item.name
-              var logoUrls = item.logoUrls[item.logoUrls.length - 1]
-              var type
-              console.log(name.indexOf("DTH"));
-              if (name.indexOf("DTH") == -1) {
-                type = "MOBILE"
-              } else {
-                type = "DTH"
-              }
-              var operator = new OperatorsSchema({
-                name,
-                operatorId,
-                logoUrls,
-                type
+            method: 'GET',
+            headers: headers
+          })
+          .then((res) => {
+            return res.json()
+          })
+          .then((json) => {
+            console.log(json);
+            // Do something with the returned data.
+            if (json.errorCode == "INVALID_TOKEN" || json.errorCode == "TOKEN_EXPIRED") {
+              //refreshToken
+              refreshToken()
+              res.status(200).json({
+                Data: {},
+                Message: "Please try again",
+                Status: "1100",
+                Token: "tokkens"
               });
-              operator.save();
+            } else {
+              var i;
+              for (i = 0; i < json.length; i++) {
+                var item = json[i]
+                var operatorId = item.operatorId
+                var name = item.name
+                var logoUrls = item.logoUrls[item.logoUrls.length - 1]
+                var type
+                console.log(name.indexOf("DTH"));
+                if (name.indexOf("DTH") == -1) {
+                  type = "MOBILE"
+                } else {
+                  type = "DTH"
+                }
+                var operator = new OperatorsSchema({
+                  name,
+                  operatorId,
+                  logoUrls,
+                  type
+                });
+                operator.save();
+              }
+
+
+
+              res.status(200).json({
+                Data: {
+                  json
+                },
+                Message: "Operator api success",
+                Status: "1000",
+                Token: "tokkens"
+              });
             }
-
-
-
-            res.status(200).json({
-              Data: {
-                json
-              },
-              Message: "Operator api success",
-              Status: "1000",
-              Token: "tokkens"
-            });
-          }
-        });
-      }
-      else {
+          });
+      } else {
         //refreshToken
         refreshToken()
         res.status(200).json({
