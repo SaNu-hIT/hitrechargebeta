@@ -38,13 +38,14 @@ router.post(
       });
       if (token) {
         var access_toke = token.access_token
-        var url = 'https://topups-sandbox.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true';
+        // var url = 'https://topups-sandbox.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true';
+        var liveurl = 'https://topups.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true';
         var headers = {
           "Authorization": "Bearer " + access_toke,
           "Accept": "application/com.reloadly.topups-v1+json"
         }
         console.log(headers);
-        fetch(url, {
+        fetch(liveurl, {
             method: 'GET',
             headers: headers
           })
@@ -271,13 +272,14 @@ router.post(
 
         https: //topups.reloadly.com/operators/countries/HT
           var access_toke = token.access_token
-        var url = 'https://topups-sandbox.reloadly.com/operators/countries/IN';
+        // var url = 'https://topups-sandbox.reloadly.com/operators/countries/IN';
+        var liveurl = 'https://topups.reloadly.com/operators/countries/IN';
         var headers = {
           "Authorization": "Bearer " + access_toke,
           "Accept": "application/com.reloadly.topups-v1+json"
         }
         console.log(headers);
-        fetch(url, {
+        fetch(liveurl, {
           method: 'GET',
           headers: headers
         })
