@@ -60,6 +60,12 @@ app.get('/adash', function(req, res) {
   res.render('admindash.ejs');
 
 });
+
+app.get('/transactionsall', function(req, res) {
+  res.render('transactionsall.ejs');
+
+});
+
 // Distributor side
 app.get('/login', function(req, res) {
   res.render('login.ejs');

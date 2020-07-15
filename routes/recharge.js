@@ -31,6 +31,13 @@ router.post(
         "Content-Type": "application/json",
         "Accept": "application/json"
       }
+      //for live
+      var client_id = "SmZPqC2WpnaOvGGmtRNcPecngIZmYhMk"
+      var client_secret = "3JwYrlcyov-j89SbNjYkGz9p60XbaA-Y1RbT74F61W6CCCi1lylTAxe3jKQl7O6"
+      var audience = "https://topups.reloadly.com"
+
+
+
       var raw = JSON.stringify({
           "client_id": "xXzIvm563MQjH9bbXix9NIW4HLsTPKiv",
           "client_secret": "nDEsFmHIhfNxicxA4w9E8RmPOq-fY5PzBRA2r02JKIBv9LR0GSCEf9nb0LysdxBx",

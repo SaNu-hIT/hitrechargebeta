@@ -9,6 +9,8 @@
   </title>
   <% include /header.ejs%>
 </head>
+
+
 <script>
   function LoadDataDromDb() {
     var data = {};
@@ -19,15 +21,11 @@
       data: JSON.stringify(data), //input data to be sent to the server
       contentType: 'application/json; charset=utf-8',
       dataType: "json",
-      url: "/shop/getshopBydistributor",
+      url: "/transactions/gettransactionadmin",
       success: function(res) {
         console.log('success');
         console.log(res);
-        var statusCode = res.statusCode
-        var status = res.status
-        console.log("status" + status);
-        console.log("statusCode" + statusCode);
-        if (statusCode == "200") {
+        if (res.Status == "1000") {
           updateDataTable(res)
         }
 
@@ -38,53 +36,17 @@
       }
     });
 
-
-
-
-
-
   }
-
-  function LoadTransactionData() {
-    var data = {};
-    var distributorId = user_id
-    data.distributorId = distributorId;
-    $.ajax({
-      type: 'POST',
-      data: JSON.stringify(data), //input data to be sent to the server
-      contentType: 'application/json; charset=utf-8',
-      dataType: "json",
-      url: "/transactions/getDashBordDetails",
-      success: function(res) {
-        console.log('success');
-        console.log(res);
-        if (res.Status == "1000") {
-          var transactions = res.Data.tranCount
-          var shopscount = res.Data.shopscount
-          var commision = res.Data.commision
-          var total_commision = res.Data.total_commision
-          $('#transactions_number').text(transactions);
-          $('#shop_number').text(shopscount);
-          $('#distributor_commision').text(commision);
-          $('#total_commision').text(total_commision);
-        }
-
-      },
-      error: function() {
-        console.log("Device control failed");
-      }
-    });
-
-  }
-
 
   var mytable;
 
   function updateDataTable(dataAsJsonArry) {
 
 
+    var shopNumber = dataAsJsonArry.Data.transactions.length
+    $('#shop_number').text(shopNumber);
 
-    console.log(dataAsJsonArry.data);
+    console.log(dataAsJsonArry.Data);
     if (mytable)
       mytable.destroy();
 
@@ -94,21 +56,27 @@
       destory: true,
       bRetrieve: true,
       searching: true,
-      data: dataAsJsonArry.data,
+      data: dataAsJsonArry.Data.transactions,
       columns: [{
-          data: "username"
+          data: "date"
+        }, {
+          data: "recipientPhone"
         },
         {
-          data: "phone"
+          data: "operatorName"
         },
         {
-          data: "password"
+          data: "amount"
         },
         {
-          data: "distributorId"
+          data: "senderPhone"
         },
         {
-          data: "commision"
+          data: "success"
+        }, {
+          data: "discount"
+        }, {
+          data: "transactionId"
         }
       ]
 
@@ -131,75 +99,8 @@
     console.log(phone);
     $('#username_text').text(phone);
     mytable = null;
-    LoadDataDromDb()
-    LoadTransactionData()
-
+    LoadDataDromDb();
     console.log("document ready");
-    $("#addshops").click(function(e) {
-      e.preventDefault();
-      console.log("click done");
-      url = "/shop/createshops"
-      console.log(url);
-      var data = {};
-      var username = $('#name').val();
-      var password = $('#password').val();
-      var phone = $('#phone').val();
-      var commision = $('#commision').val();
-      var pincode = $('#pincode').val();
-      var distributorId = user_id
-      var shopId = $('#shopId').val();
-      data.username = username; //input
-      data.password = password; //input
-      data.phone = phone; //input
-      data.distributorId = distributorId; //input
-      data.pincode = pincode; //input
-      data.commision = commision;
-      data._id = shopId; //input
-      console.log(JSON.stringify(data));
-      $.ajax({
-        type: 'POST',
-        data: JSON.stringify(data), //input data to be sent to the server
-        contentType: 'application/json; charset=utf-8',
-        dataType: "json",
-        url: url,
-        success: function(res) {
-          console.log('success');
-          console.log(res);
-          var statusCode = res.statusCode
-          var message = res.message
-          var status = res.status
-          console.log("Message" + message);
-          console.log("status" + status);
-          console.log("statusCode" + statusCode);
-          if (statusCode == "200") {
-            LoadDataDromDb();
-            $('#name').val("");
-            $('#password').val("");
-            $('#phone').val("");
-            $('#commision').val("");
-            $('#pincode').val("");
-            swal("Success", message, "success");
-          } else {
-
-            swal("Oops", message, "error");
-
-          }
-
-
-        },
-        error: function() {
-          console.log("Device control failed");
-        }
-      });
-    });
-
-
-
-
-
-
-
-
   });
 </script>
 
@@ -220,7 +121,7 @@
       </button>
       <!-- Brand -->
       <a class="navbar-brand pt-0" href="/ddash">
-        <img src="./img/brand/blue.png" class="navbar-brand-img" alt="...">
+        <img src="./assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
       </a>
       <!-- User -->
       <ul class="nav align-items-center d-md-none">
@@ -239,7 +140,7 @@
           <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <div class="media align-items-center">
               <span class="avatar avatar-sm rounded-circle">
-                <img alt="Image placeholder" src="./img/theme/team-1-800x800.jpg
+                <img alt="Image placeholder" src="./assets/img/theme/team-1-800x800.jpg
 ">
               </span>
             </div>
@@ -279,7 +180,7 @@
           <div class="row">
             <div class="col-6 collapse-brand">
               <a href="/ddash">
-                <img src="./img/brand/blue.png">
+                <img src="./assets/img/brand/blue.png">
               </a>
             </div>
             <div class="col-6 collapse-close">
@@ -301,9 +202,8 @@
             </div>
           </div>
         </form>
-        <!-- Navigation -->
         <ul class="navbar-nav">
-          <li class="nav-item  active ">
+          <li class="nav-item  ">
             <a class="nav-link  active " href="/ddash">
               <i class="ni ni-tv-2 text-primary"></i> Dashboard
             </a>
@@ -316,7 +216,7 @@
           </li>
 
 
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link " href="/transactionsall">
               <i class="ni ni-bullet-list-67 text-red"></i> Transations
             </a>
@@ -333,8 +233,6 @@
         <!-- Divider -->
         <hr class="my-3">
         <!-- Heading -->
-
-
       </div>
     </div>
   </nav>
@@ -343,7 +241,7 @@
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
       <div class="container-fluid">
         <!-- Brand -->
-        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="./index.html">Dashboard</a>
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="/ddash">Transaction</a>
         <!-- Form -->
         <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
           <div class="form-group mb-0">
@@ -402,92 +300,7 @@
       <div class="container-fluid">
         <div class="header-body">
           <!-- Card stats -->
-          <div class="row">
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">TRANSACTIONS</h5>
-                      <span class="h2 font-weight-bold mb-0" id="transactions_number"></span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
-                        <i class="fas fa-chart-bar"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">SHOPS</h5>
-                      <span class="h2 font-weight-bold mb-0" id="shop_number"></span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
-                        <i class="fas fa-chart-pie"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-danger mr-2"><i class="fas fa-arrow-down"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last week</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Sales</h5>
-                      <span class="h2 font-weight-bold mb-0" id="total_commision"></span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                        <i class="fas fa-users"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-warning mr-2"><i class="fas fa-arrow-down"></i> 1.10%</span>
-                    <span class="text-nowrap">Since yesterday</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-lg-6">
-              <div class="card card-stats mb-4 mb-xl-0">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">COMMISION</h5>
-                      <span class="h2 font-weight-bold mb-0" id="distributor_commision"></span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-info text-white rounded-circle shadow">
-                        <i class="fas fa-percent"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-muted text-sm">
-                    <span class="text-success mr-2"><i class="fas fa-arrow-up"></i> 12%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -498,7 +311,7 @@
             <div class="card-header border-0">
               <div class="row align-items-center">
                 <div class="col">
-                  <h3 class="mb-0">SHOPS</h3>
+                  <h3 class="mb-0">Transaction</h3>
                 </div>
 
               </div>
@@ -508,11 +321,14 @@
               <table id="shopsDatatable" cellspacing="0" width="100%" class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Phone</th>
-                    <th scope="col">Password</th>
-                    <th scope="col">ID</th>
-                    <th scope="col">Commision</th>
+                    <th scope="col">OPERATOR</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">SHOP</th>
+                    <th scope="col">SUCCESS</th>
+                    <th scope="col">COMMISION</th>
+                    <th scope="col">TRANSACTION ID</th>
                   </tr>
                 </thead>
                 <tbody>

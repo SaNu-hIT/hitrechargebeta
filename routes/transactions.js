@@ -12,11 +12,94 @@ const request = require('request');
 const fetch = require('node-fetch');
 const Transaction = require("../model/transactions");
 const Wallet = require("../model/wallet");
+const Shops = require("../model/shops");
+const Distributor = require("../model/distributor");
+
 /**
  * @method - POST
  * @param - /signup
  * @description - User SignUp
  */
+
+
+router.post(
+  "/getDashBordDetails",
+  [
+
+  ],
+  async (req, res) => {
+    const {
+      distributorId
+    } = req.body;
+    try {
+
+      let transactions = await Transaction.find({
+        distributorId
+      }).sort({
+        date: -1
+      });
+      var _id = distributorId
+
+      let distributor = await Distributor.findOne({
+        _id
+      });
+
+      let shops = await Shops.find({
+        distributorId
+      }).sort({
+        date: -1
+      });
+
+
+
+
+
+
+      var transactioncount
+      var shopscount
+      var commision
+
+      if (transactions) {
+        transactioncount = transactions.length
+      }
+      if (shops) {
+        shopscount = shops.length
+      }
+      if (distributor) {
+        commision = distributor.commision
+      }
+
+
+      var total_commision = "9999"
+
+
+
+
+      console.log(total_commision);
+
+
+
+
+
+      res.status(200).json({
+        Data: {
+          tranCount: transactioncount,
+          shopscount: shopscount,
+          commision: commision,
+          total_commision: total_commision
+
+        },
+        Message: "Transation get success",
+        Status: "1000",
+        Token: "tokkens"
+      });
+
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Error getting data ");
+    }
+  }
+);
 
 
 
