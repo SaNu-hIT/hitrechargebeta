@@ -80,7 +80,7 @@ router.post(
             if (token) {
               var access_toke = "Bearer " + token.access_token
               var url = 'https://topups-sandbox.reloadly.com/topups';
-              var liveurl = 'https://topups-sandbox.reloadly.com/topups';
+              var liveurl = 'https://topups.reloadly.com/topups';
               console.log(access_toke);
               var headers = {
                 "Authorization": access_toke,
