@@ -99,7 +99,7 @@ router.post(
                 },
                 'operatorId': operatorId,
                 'amount': amount,
-                'useLocalAmount': 'false',
+                'useLocalAmount': 'true',
                 'customIdentifier': customIdentifier
               });
 
@@ -115,7 +115,7 @@ router.post(
                 })
                 .then((json) => {
                   console.log(json);
-                  if (json.errorCode == "INVALID_TOKEN" || json.errorCode == "TOKEN_EXPIRED" || json.errorCode == "CUSTOM_IDENTIFIER_ALREADY_USED" || json.errorCode == "INSUFFICIENT_BALANCE") {
+                  if (json.errorCode == "INVALID_TOKEN" || json.errorCode == "TOKEN_EXPIRED" || json.errorCode == "CUSTOM_IDENTIFIER_ALREADY_USED" || json.errorCode == "INSUFFICIENT_BALANCE" || json.errorCode == "INVALID_RECIPIENT_PHONE") {
                     refreshToken()
                     res.status(200).json({
                       Data: {

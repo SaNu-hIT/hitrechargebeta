@@ -37,9 +37,20 @@ router.post(
         access_id
       });
       if (token) {
+
+
+        //
+        // curl--include\
+        // --header "Accept: application/com.reloadly.topups-v1+json"\
+        //   --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik0wWXpRa"\
+        // 'https://topups.reloadly.com/operators?page=1&size=3&suggestedAmounts=true&suggestedAmountsMap=true&includeBundles=true'
+        // open
+        // RESPONSE
+
+
         var access_toke = token.access_token
         // var url = 'https://topups-sandbox.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true';
-        var liveurl = 'https://topups.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true';
+        var liveurl = 'https://topups.reloadly.com/operators/auto-detect/phone/' + phone + '/countries/IN?&includeBundles=true&suggestedAmounts=true&suggestedAmountsMap=true';
         var headers = {
           "Authorization": "Bearer " + access_toke,
           "Accept": "application/com.reloadly.topups-v1+json"
