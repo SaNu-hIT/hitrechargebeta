@@ -99,7 +99,7 @@ router.post(
                 },
                 'operatorId': operatorId,
                 'amount': amount,
-                'useLocalAmount': 'true',
+                'useLocalAmount': 'false',
                 'customIdentifier': customIdentifier
               });
 
