@@ -21,7 +21,7 @@ const Shops = require("../model/shops");
  * @description - User SignUp
  */
 router.post(
-  "/topups", [check("operatorId", "Please Enter a Valid operatorId")
+  "/topup", [check("operatorId", "Please Enter a Valid operatorId")
     .not()
     .isEmpty()
   ],
@@ -78,6 +78,8 @@ router.post(
 
           if (amount < wallet.wallet_balance) {
             if (token) {
+
+
               var access_toke = "Bearer " + token.access_token
               var url = 'https://topups-sandbox.reloadly.com/topups';
               var liveurl = 'https://topups.reloadly.com/topups';
@@ -265,5 +267,184 @@ router.post(
 );
 
 
+
+router.post(
+  "/topups", [check("operatorId", "Please Enter a Valid operatorId")
+    .not()
+    .isEmpty()
+  ],
+  async (req, res) => {
+    try {
+      var access_ids = "recharge"
+      var distributorId
+      var access_id = access_ids
+      let token = await TokenSchema.findOne({
+        access_id
+      });
+
+      const {
+        operatorId,
+        operatorName,
+        shopId,
+        discount,
+        amount,
+        customIdentifier,
+        recipientPhone,
+        recipientCountryCode,
+        recipientNumber,
+        senderPhone,
+        senderCountryCode,
+        senderNumber,
+        logoUrl
+      } = req.body;
+      var success = false
+      var ObjectID = require('mongodb').ObjectID;
+      console.log(shopId);
+
+
+      let wallet = await WalletSchema.findOne({
+        shopId
+      });
+
+      var _id = shopId
+
+      let shops = await Shops.findOne({
+        _id
+      });
+
+
+      if (shops) {
+        distributorId = shops.distributorId
+        console.log("distributorId");
+        console.log(distributorId);
+
+
+        if (wallet) {
+
+
+          console.log(wallet.wallet_balance);
+
+          if (amount < wallet.wallet_balance) {
+            if (token) {
+
+
+
+
+              var transactionId
+              var recharge = new RechargeSchema({
+                operatorId,
+                operatorName,
+                shopId,
+                discount,
+                amount,
+                customIdentifier,
+                recipientPhone,
+                recipientCountryCode,
+                recipientNumber,
+                senderPhone,
+                senderCountryCode,
+                senderNumber,
+                logoUrl,
+                success,
+                transactionId,
+                distributorId
+              });
+
+
+
+
+
+              recharge.success = true
+              recharge.discount = 2.3
+              recharge.transactionId = "123"
+              console.log(recharge);
+              recharge.save();
+
+
+
+
+              if (wallet) {
+                // update wallet
+                console.log("" + wallet.wallet_balance);
+                var updatebalance = wallet.wallet_balance - amount
+                console.log("" + updatebalance);
+                console.log(updatebalance);
+                wallet.wallet_balance = updatebalance
+                console.log(wallet.wallet_balance);
+                console.log(wallet);
+                console.log(wallet._id);
+                // wallet.remove();
+                var myquery = {
+                  _id: ObjectID(wallet._id)
+                };
+                var newvalues = {
+                  $set: {
+                    wallet_balance: updatebalance
+                  }
+                };
+                WalletSchema.updateOne(myquery, newvalues, function(err, res) {
+                  if (err) throw err;
+                  console.log("1 document updated");
+                  console.log(res);
+                });
+              }
+              res.status(200).json({
+                Data: {},
+                Message: "Top up Success",
+                Status: "1000",
+                Token: "tokkens"
+              });
+
+            } else {
+              refreshToken()
+              res.status(200).json({
+                Data: {},
+                Message: "Please try again",
+                Status: "1100",
+                Token: "tokkens"
+              });
+            }
+
+          } else {
+
+            res.status(200).json({
+              Data: {},
+              Message: "Please add moneny to wallet",
+              Status: "1002",
+              Token: "tokkens"
+            });
+
+          }
+
+        } else {
+          res.status(200).json({
+            Data: {},
+            Message: "Please add moneny to wallet",
+            Status: "1001",
+            Token: "tokkens"
+          });
+        }
+      } else {
+        res.status(200).json({
+          Data: {},
+          Message: "Please try again",
+          Status: "1001",
+          Token: "tokkens"
+        });
+      }
+
+
+
+
+
+
+
+
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Error in Saving");
+    }
+  }
+);
 
 module.exports = router;
