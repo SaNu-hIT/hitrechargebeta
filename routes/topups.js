@@ -20,6 +20,8 @@ const Shops = require("../model/shops");
  * @param - /signup
  * @description - User SignUp
  */
+
+// for relody
 router.post(
   "/topup", [check("operatorId", "Please Enter a Valid operatorId")
     .not()
@@ -266,8 +268,7 @@ router.post(
   }
 );
 
-
-
+// for https://www.cyrusrecharge.in/Root/API/RechargeAPI.aspx
 router.post(
   "/topups", [check("operatorId", "Please Enter a Valid operatorId")
     .not()
@@ -328,72 +329,117 @@ router.post(
             if (token) {
 
 
+              // https: //cyrusrecharge.in/api/recharge.aspx?memberid=AP463986&pin=50EAE84295&number=MOBILE/DTH/DATA_CARD_NUMBER&operator=Operator_Code&circle=Cirlce_Code&amount=AMOUNT&usertx=Your_Txn_ID&format=csv/json/xml
 
 
-              var transactionId
-              var recharge = new RechargeSchema({
-                operatorId,
-                operatorName,
-                shopId,
-                discount,
-                amount,
-                customIdentifier,
-                recipientPhone,
-                recipientCountryCode,
-                recipientNumber,
-                senderPhone,
-                senderCountryCode,
-                senderNumber,
-                logoUrl,
-                success,
-                transactionId,
-                distributorId
-              });
+              var baseurl = "https://cyrusrecharge.in/api/recharge.aspx?"
+              var memberid = "memberid=AP463986"
+              var pin = "&pin=50EAE84295"
+              var number = "&number=" + recipientNumber
+              var operator = "&operator=" + operatorId
+              var circle = "&circle=11"
+              var url_amount = "&amount=" + amount
+              var usertx = "&usertx=" + customIdentifier
+              var format = "&format=json"
 
+              var liveurl = baseurl + memberid + pin + number + operator + circle + url_amount + usertx +
+                format
 
+              console.log(liveurl);
+              fetch(liveurl, {
+                  method: 'GET'
+                })
+                .then((res) => {
+                  return res.json()
+                })
+                .then((json) => {
+                  console.log(json);
 
-
-
-              recharge.success = true
-              recharge.discount = 2.3
-              recharge.transactionId = "123"
-              console.log(recharge);
-              recharge.save();
-
-
-
-
-              if (wallet) {
-                // update wallet
-                console.log("" + wallet.wallet_balance);
-                var updatebalance = wallet.wallet_balance - amount
-                console.log("" + updatebalance);
-                console.log(updatebalance);
-                wallet.wallet_balance = updatebalance
-                console.log(wallet.wallet_balance);
-                console.log(wallet);
-                console.log(wallet._id);
-                // wallet.remove();
-                var myquery = {
-                  _id: ObjectID(wallet._id)
-                };
-                var newvalues = {
-                  $set: {
-                    wallet_balance: updatebalance
+                  if (json.Status == "FAILURE" || json.errorCode == "FAILED") {
+                    refreshToken()
+                    res.status(200).json({
+                      Data: {
+                        json
+                      },
+                      Message: json.ErrorMessage,
+                      Status: "1100",
+                      Token: "tokkens"
+                    });
+                  } else if (json.ApiTransID != 0) {
+                    var transactionId
+                    var recharge = new RechargeSchema({
+                      operatorId,
+                      operatorName,
+                      shopId,
+                      discount,
+                      amount,
+                      customIdentifier,
+                      recipientPhone,
+                      recipientCountryCode,
+                      recipientNumber,
+                      senderPhone,
+                      senderCountryCode,
+                      senderNumber,
+                      logoUrl,
+                      success,
+                      transactionId,
+                      distributorId
+                    });
+                    recharge.success = true
+                    recharge.discount = "0"
+                    recharge.transactionId = json.ApiTransID
+                    console.log(recharge);
+                    recharge.save();
+                    if (wallet) {
+                      // update wallet
+                      console.log("" + wallet.walle t_balance);
+                      var updatebalance = wallet.wallet_balance - json.requestedAmount
+                      console.log("" + json.requestedAmount);
+                      console.log(updatebalance);
+                      wallet.wallet_balance = updatebalance
+                      console.log(wallet.wallet_balance);
+                      console.log(wallet);
+                      console.log(wallet._id);
+                      // wallet.remove();
+                      var myquery = {
+                        _id: ObjectID(wallet._id)
+                      };
+                      var newvalues = {
+                        $set: {
+                          wallet_balance: updatebalance
+                        }
+                      };
+                      WalletSchema.updateOne(myquery, newvalues, function(err, res) {
+                        if (err) throw err;
+                        console.log("1 document updated");
+                        console.log(res);
+                      });
+                    }
+                    res.status(200).json({
+                      Data: {
+                        json
+                      },
+                      Message: "Top up Success",
+                      Status: "1000",
+                      Token: "tokkens"
+                    });
+                  } else {
+                    res.status(200).json({
+                      Data: {
+                        json
+                      },
+                      Message: json.ErrorMessage,
+                      Status: "1001",
+                      Token: "tokkens"
+                    });
                   }
-                };
-                WalletSchema.updateOne(myquery, newvalues, function(err, res) {
-                  if (err) throw err;
-                  console.log("1 document updated");
-                  console.log(res);
+
+
+
+
+
                 });
-              }
-              res.status(200).json({
-                Data: {},
-                Message: "Top up Success",
-                Status: "1000",
-                Token: "tokkens"
-              });
+
 
             } else {
               refreshToken()
@@ -446,5 +492,7 @@ router.post(
     }
   }
 );
+
+
 
 module.exports = router;
