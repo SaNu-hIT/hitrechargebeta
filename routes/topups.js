@@ -392,7 +392,7 @@ router.post(
                     recharge.save();
                     if (wallet) {
                       // update wallet
-                      console.log("" + wallet.walle t_balance);
+                      console.log("" + wallet.wallet_balance);
                       var updatebalance = wallet.wallet_balance - json.requestedAmount
                       console.log("" + json.requestedAmount);
                       console.log(updatebalance);
